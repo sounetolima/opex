@@ -138,8 +138,9 @@
   footer a:hover{color:var(--gold)}
 
   /* floating whatsapp */
-  .wa-float{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom));z-index:50;width:58px;height:58px;border-radius:50%;background:var(--wa);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px -8px rgba(37,211,102,.6);transition:transform .3s;text-decoration:none}
+  .wa-float{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom));z-index:50;width:58px;height:58px;border-radius:50%;background:var(--wa);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px -8px rgba(37,211,102,.6);transition:transform .3s,opacity .3s;text-decoration:none}
   .wa-float:hover{transform:scale(1.07)}
+  .wa-float.is-hidden{opacity:0;transform:scale(.7);pointer-events:none}
   .wa-float::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--wa);animation:ping 2.8s ease-out infinite}
   .wa-float svg{width:30px;height:30px;fill:#fff;position:relative;z-index:1}
 
@@ -315,6 +316,16 @@
     b.addEventListener('click',function(){set(!h.classList.contains('open'));});
     h.querySelectorAll('.nav a').forEach(function(a){a.addEventListener('click',function(){set(false);});});
     document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false);});
+  })();
+  (function(){
+    // esconde o botão flutuante enquanto um botão de WhatsApp já está na tela (topo e contato)
+    var fl=document.querySelector('.wa-float'); if(!fl||!('IntersectionObserver' in window)) return;
+    var seen=new Set();
+    var io=new IntersectionObserver(function(en){
+      en.forEach(function(e){ if(e.isIntersecting) seen.add(e.target); else seen.delete(e.target); });
+      fl.classList.toggle('is-hidden', seen.size>0);
+    });
+    document.querySelectorAll('.hero .actions, .contact .actions').forEach(function(el){ io.observe(el); });
   })();
   (function(){
     var els=document.querySelectorAll('.card');

@@ -151,6 +151,55 @@
   .anim{animation:fadeUp .9s ease both}
   .d1{animation-delay:.1s}.d2{animation-delay:.25s}.d3{animation-delay:.4s}
 
+
+  /* ===== animações (after effects) ===== */
+  @property --ang{syntax:'<angle>';inherits:false;initial-value:0deg}
+  /* 1. título palavra por palavra + brilho dourado */
+  h1 .w{display:inline-block;opacity:0;transform:translateY(.45em);filter:blur(8px);animation:wordIn .7s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:calc(.12s + var(--i) * 70ms)}
+  h1 em.w{background:linear-gradient(100deg,var(--gold) 0%,var(--gold) 40%,#fff5cf 50%,var(--gold) 60%,var(--gold) 100%);background-size:250% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:wordIn .7s cubic-bezier(.2,.7,.2,1) forwards,shine 4.5s ease-in-out 1.4s infinite;animation-delay:calc(.12s + var(--i) * 70ms),1.4s}
+  @keyframes wordIn{to{opacity:1;transform:none;filter:none}}
+  @keyframes shine{0%{background-position:100% 0}45%,100%{background-position:-50% 0}}
+  .lead.anim{animation-delay:.55s}.actions.anim{animation-delay:.7s}
+
+  /* 2. cards vivos: luz dourada girando na borda + brilho que segue o mouse */
+  .card{transform-style:preserve-3d;--mx:50%;--my:50%}
+  .card::after{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;pointer-events:none;
+    background:conic-gradient(from var(--ang),transparent 0 62%,rgba(232,195,90,.15) 72%,var(--gold) 84%,#fff2c2 87%,transparent 92%);
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);
+    opacity:0;transition:opacity .4s}
+  .card .glow{position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .35s;
+    background:radial-gradient(420px circle at var(--mx) var(--my),rgba(232,195,90,.10),transparent 45%)}
+  .card>*{position:relative}
+  @media (hover:hover) and (pointer:fine){
+    .card:hover::after{opacity:1;animation:spin 3.2s linear infinite}
+    .card:hover .glow{opacity:1}
+  }
+  @media (hover:none){ .card.in::after{animation:spin 2.6s linear .3s 1 both,flash 2.6s ease .3s 1 both} }
+  @keyframes spin{to{--ang:360deg}}
+  @keyframes flash{0%,100%{opacity:0}15%,80%{opacity:1}}
+
+  /* 3. faixa rolando */
+  .marquee{position:relative;overflow:hidden;border-top:1px solid var(--line);padding:22px 0;
+    -webkit-mask:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+  .marquee-track{display:flex;width:max-content;animation:marquee 38s linear infinite}
+  .marquee:hover .marquee-track{animation-play-state:paused}
+  .marquee ul{display:flex;align-items:center;list-style:none;flex-shrink:0}
+  .marquee li{display:flex;align-items:center;font-size:clamp(1.15rem,2.6vw,1.75rem);font-weight:800;letter-spacing:-.01em;white-space:nowrap}
+  .marquee li:nth-child(even){color:transparent;-webkit-text-stroke:1px rgba(244,246,251,.55)}
+  .marquee li::after{content:"";width:9px;height:9px;margin:0 28px;background:var(--gold);transform:rotate(45deg);border-radius:1px;flex-shrink:0;box-shadow:0 0 12px rgba(232,195,90,.7)}
+  .marquee+section{border-top:0}
+  @keyframes marquee{to{transform:translateX(-50%)}}
+
+  /* 4. entradas ao rolar */
+  .js .reveal{opacity:0;transform:translateY(28px);filter:blur(6px);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.7,.2,1),filter .9s ease}
+  .js .reveal.in{opacity:1;transform:none;filter:none}
+  .js .rule{transform:scaleX(0);transition:transform 1s cubic-bezier(.2,.7,.2,1) .25s}
+  .js .reveal.in .rule,.js .rule.in{transform:scaleX(1)}
+  .globe-wrap{will-change:transform,opacity}
+  .globe-wrap.anim{animation:globeIn 1.1s ease backwards}
+  @keyframes globeIn{from{opacity:0;transform:scale(.94)}}
+
   /* ---------- responsive ---------- */
   @media (max-width:960px){
     .grid{grid-template-columns:repeat(2,1fr)}
@@ -185,6 +234,9 @@
     html{scroll-behavior:auto}
     *,*::before,*::after{animation:none!important;transition:none!important}
     .js .card{opacity:1;transform:none}
+    h1 .w,.js .reveal{opacity:1;transform:none;filter:none}
+    .js .rule{transform:none}
+    h1 em.w{color:var(--gold);background:none}
   }
 </style>
 </head>
@@ -219,7 +271,7 @@
 <div class="hex h8 " title="Criadores"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.5"/><path d="M8 7l1.5-3h5L16 7"/></svg></i></div>
       </div>
       <span class="eyebrow anim d1">OPEX Business Growth</span>
-      <h1 class="anim d1">Estratégias inteligentes para negócios em <em>qualquer direção</em>!</h1>
+      <h1>Estratégias inteligentes para negócios em <em>qualquer direção</em>!</h1>
       <p class="lead anim d2">Posicionamento, identidade, sites e redes sociais para negócios que querem crescer, em todo o Brasil, com comunicação clara que gera resultado de verdade.</p>
       <div class="actions anim d3">
         <a class="btn btn-primary" href="https://wa.me/5579981697274?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20OPEX%20e%20quero%20conversar%20sobre%20o%20meu%20neg%C3%B3cio." target="_blank" rel="noopener">Falar no WhatsApp</a>
@@ -228,45 +280,53 @@
     </div>
   </div>
 
+  <div class="marquee" aria-label="Serviços da OPEX"><div class="marquee-track"><ul><li>Posicionamento</li><li>Kit de marca</li><li>Sites e landing pages</li><li>Redes sociais</li><li>Cartão NFC</li><li>Parcerias com criadores</li></ul><ul aria-hidden="true"><li>Posicionamento</li><li>Kit de marca</li><li>Sites e landing pages</li><li>Redes sociais</li><li>Cartão NFC</li><li>Parcerias com criadores</li></ul></div></div>
+
   <section id="servicos">
     <div class="wrap">
-      <div class="section-head">
+      <div class="section-head reveal">
         <span class="kicker">Serviços</span>
         <h2>Da fundação à escala</h2>
         <p>Cada etapa prepara a próxima. Comece pelo que a sua marca precisa agora.</p>
       </div>
       <div class="grid">
-        <article class="card" id="consultoria-posicionamento">
+        <article class="card" data-tilt id="consultoria-posicionamento">
+          <span class="glow" aria-hidden="true"></span>
           <div><span class="stage">Fundação</span><span class="num">01</span></div>
           <h3>Consultoria de posicionamento</h3>
           <p>Definimos o que a sua marca representa, para quem ela fala e por que o cliente deve escolher você.</p>
           <a class="card-cta" href="https://wa.me/5579981697274?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20OPEX%20e%20quero%20saber%20mais%20sobre%3A%20Consultoria%20de%20posicionamento." target="_blank" rel="noopener" aria-label="Quero saber mais sobre Consultoria de posicionamento no WhatsApp">Quero saber mais <span aria-hidden="true">→</span></a>
         </article>
-        <article class="card" id="kit-de-marca">
+        <article class="card" data-tilt id="kit-de-marca">
+          <span class="glow" aria-hidden="true"></span>
           <div><span class="stage">Identidade</span><span class="num">02</span></div>
           <h3>Kit de marca</h3>
           <p>Logotipo, paleta de cores, tipografia e aplicações que mantêm a sua identidade consistente em todos os canais.</p>
           <a class="card-cta" href="https://wa.me/5579981697274?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20OPEX%20e%20quero%20saber%20mais%20sobre%3A%20Kit%20de%20marca." target="_blank" rel="noopener" aria-label="Quero saber mais sobre Kit de marca no WhatsApp">Quero saber mais <span aria-hidden="true">→</span></a>
         </article>
-        <article class="card" id="sites-landing-pages">
+        <article class="card" data-tilt id="sites-landing-pages">
+          <span class="glow" aria-hidden="true"></span>
           <div><span class="stage">Captação</span><span class="num">03</span></div>
           <h3>Sites e landing pages</h3>
           <p>Páginas rápidas e objetivas, feitas para transformar visitas em contatos, agendamentos e vendas.</p>
           <a class="card-cta" href="https://wa.me/5579981697274?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20OPEX%20e%20quero%20saber%20mais%20sobre%3A%20Sites%20e%20landing%20pages." target="_blank" rel="noopener" aria-label="Quero saber mais sobre Sites e landing pages no WhatsApp">Quero saber mais <span aria-hidden="true">→</span></a>
         </article>
-        <article class="card" id="gestao-redes-sociais">
+        <article class="card" data-tilt id="gestao-redes-sociais">
+          <span class="glow" aria-hidden="true"></span>
           <div><span class="stage">Presença digital</span><span class="num">04</span></div>
           <h3>Gestão de redes sociais</h3>
           <p>Planejamento, criação e publicação de conteúdo alinhado à sua marca, com foco em relacionamento e vendas.</p>
           <a class="card-cta" href="https://wa.me/5579981697274?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20OPEX%20e%20quero%20saber%20mais%20sobre%3A%20Gest%C3%A3o%20de%20redes%20sociais." target="_blank" rel="noopener" aria-label="Quero saber mais sobre Gestão de redes sociais no WhatsApp">Quero saber mais <span aria-hidden="true">→</span></a>
         </article>
-        <article class="card" id="cartao-nfc">
+        <article class="card" data-tilt id="cartao-nfc">
+          <span class="glow" aria-hidden="true"></span>
           <div><span class="stage">Relacionamento</span><span class="num">05</span></div>
           <h3>Cartão NFC de contato e avaliação</h3>
           <p>Um toque do celular e o cliente acessa seus contatos ou avalia a sua empresa no Google, sem digitar nada.</p>
           <a class="card-cta" href="https://wa.me/5579981697274?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20OPEX%20e%20quero%20saber%20mais%20sobre%3A%20Cart%C3%A3o%20NFC%20de%20contato%20e%20avalia%C3%A7%C3%A3o." target="_blank" rel="noopener" aria-label="Quero saber mais sobre Cartão NFC de contato e avaliação no WhatsApp">Quero saber mais <span aria-hidden="true">→</span></a>
         </article>
-        <article class="card" id="parcerias-criadores">
+        <article class="card" data-tilt id="parcerias-criadores">
+          <span class="glow" aria-hidden="true"></span>
           <div><span class="stage">Escala</span><span class="num">06</span></div>
           <h3>Parcerias com criadores</h3>
           <p>Conectamos a sua marca a criadores de conteúdo alinhados ao seu público, com negociação, briefing e acompanhamento.</p>
@@ -277,7 +337,7 @@
   </section>
 
   <section id="sobre" class="manifesto">
-    <div class="wrap">
+    <div class="wrap reveal">
       <span class="kicker">Sobre a OPEX</span>
       <div class="rule"></div>
       <p class="quote">Valor antes do <span>preço.</span></p>
@@ -287,12 +347,12 @@
 
   <section id="contato" class="contact">
     <div class="wrap">
-      <div class="section-head">
+      <div class="section-head reveal">
         <span class="kicker">Contato</span>
         <h2>Vamos conversar?</h2>
         <p>Conte o que você precisa e a gente desenha o caminho.</p>
       </div>
-      <div class="actions">
+      <div class="actions reveal">
         <a class="btn btn-primary" href="https://wa.me/5579981697274?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20OPEX%20e%20quero%20conversar%20sobre%20o%20meu%20neg%C3%B3cio." target="_blank" rel="noopener">Falar no WhatsApp</a>
       </div>
       <p class="alt">WhatsApp: <a href="https://wa.me/5579981697274?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20OPEX%20e%20quero%20conversar%20sobre%20o%20meu%20neg%C3%B3cio." target="_blank" rel="noopener">(79) 98169-7274</a> · Instagram: <a href="https://www.instagram.com/opexbusiness/" target="_blank" rel="noopener">@opexbusiness</a></p>
@@ -328,6 +388,51 @@
       fl.classList.toggle('is-hidden', seen.size>0);
     });
     document.querySelectorAll('.hero .actions, .contact .actions').forEach(function(el){ io.observe(el); });
+  })();
+
+  // 1. título: separa as palavras para a entrada uma a uma
+  (function(){
+    var h=document.querySelector('.hero h1'); if(!h) return; var i=0;
+    Array.prototype.slice.call(h.childNodes).forEach(function(n){
+      if(n.nodeType===3){
+        var frag=document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(function(p){
+          if(!p) return;
+          if(/^\s+$/.test(p)){frag.appendChild(document.createTextNode(' '));return;}
+          var sp=document.createElement('span'); sp.className='w'; sp.style.setProperty('--i',i++); sp.textContent=p; frag.appendChild(sp);
+        });
+        h.replaceChild(frag,n);
+      } else if(n.nodeType===1){ n.classList.add('w'); n.style.setProperty('--i',i++); }
+    });
+  })();
+  // 2. cards: inclinação 3D e brilho que seguem o mouse (só desktop)
+  (function(){
+    if(!window.matchMedia('(hover:hover) and (pointer:fine)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.querySelectorAll('[data-tilt]').forEach(function(c){
+      c.addEventListener('mousemove',function(e){
+        var r=c.getBoundingClientRect(), x=(e.clientX-r.left)/r.width, y=(e.clientY-r.top)/r.height;
+        c.style.setProperty('--mx',(x*100)+'%'); c.style.setProperty('--my',(y*100)+'%');
+        c.style.transition='transform .12s ease-out,border-color .35s,box-shadow .35s';
+        c.style.transform='perspective(900px) rotateX('+((.5-y)*7).toFixed(2)+'deg) rotateY('+((x-.5)*9).toFixed(2)+'deg) translateY(-4px)';
+      });
+      c.addEventListener('mouseleave',function(){ c.style.transition=''; c.style.transform=''; });
+    });
+  })();
+  // 4. entradas ao rolar + parallax do globo
+  (function(){
+    var els=document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});}
+    else{
+      var io=new IntersectionObserver(function(en){en.forEach(function(e){ if(e.isIntersecting){e.target.classList.add('in'); io.unobserve(e.target);} });},{threshold:.2});
+      els.forEach(function(e){io.observe(e);});
+    }
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var g=document.querySelector('.globe-wrap'), hero=document.querySelector('.hero'); if(!g||!hero) return;
+    var ticking=false;
+    function upd(){ ticking=false; var y=window.scrollY, h=hero.offsetHeight; if(y>h) return;
+      g.style.transform='translate3d(0,'+(y*.28).toFixed(1)+'px,0) scale('+(1-Math.min(y/h,1)*.12).toFixed(3)+')';
+      g.style.opacity=(1-Math.min(y/h,1)*.85).toFixed(3); }
+    window.addEventListener('scroll',function(){ if(!ticking){ticking=true;requestAnimationFrame(upd);} },{passive:true});
   })();
   (function(){
     var els=document.querySelectorAll('.card');

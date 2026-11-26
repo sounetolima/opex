@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://opexbusiness.netlify.app/sitemap.xml
